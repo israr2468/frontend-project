@@ -1,0 +1,13 @@
+body {
+    background-image: url(https://i.kym-cdn.com/photos/images/facebook/001/389/404/a2b.jpg);
+    background-position: center center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-size: cover;
+    background-color: #ffffff;
+}
+
+h1 {
+    font-size: 60px;
+    color: #ffffff;
+}

@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Front End Project</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://code.jquery.com/jquery-3.5.1.js" integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc=" crossorigin="anonymous"></script>
+    <script src="app.js"></script>
+</head>
+<body>
+    <div id="navbar">
+        <a class="active" href="/">Home</a>
+        <a id="about-btn" href="#">About Us</a>
+        <a id="settings-btn" href="#">Settings</a>
+    </div>
+      
+    <script>
+        var aboutBtn = document.getElementById("about-btn");
+        aboutBtn.addEventListener("click", function() {
+          window.location.href = "about.html";
+        });
+        var settingsBtn = document.getElementById("settings-btn");
+        settingsBtn.addEventListener("click", function() {
+          window.location.href = "settings.html";
+        });
+    </script>
+
+
+<div id="main">
+    <div id="header">
+        <h1>Meme Template Finder</h1>
+        <h6>Scroll through the page and find a template that you like.</h6>
+        <h6>Remeber the name of the meme! Come back up here to create your own!</h6>
+        <h6>Just press the "Generate your own meme!" button</h6>
+        <h6>If you remember your favorite memes name then search for it here  ↙ </h6>
+        
+    </div>
+    
+    <div id="user-section">
+        
+        <label>Your favorite template: <input type="text" name="search" id="input" /></label>
+        <button id="submit">🔎</button>
+    </div>
+        <button class="cool" id="empty" role="button">Press me to admire the meme behind the scenes</button>
+        <button class="cool" id="generate" role="button">Generate your own meme!</button>
+        <script>
+            $( "#generate" ).click(function() {
+            window.location.href = "https://imgflip.com/memegenerator";
+            });
+        </script>
+    
+        <div id="results"></div>
+    </div>
+
+
+    <div class="meme">
+        <script>
+            function handleError(err) {
+                console.log("OH NO!");
+                console.log(err);
+            }
+            //submitButton 
+            const submitButton = $("#submit");
+            const input = $("#input");
+            const resultContainer = $("#results");
+            
+            
+        const memeEl = document.querySelector(".meme");
+        const endpoint = "https://api.imgflip.com/get_memes";
+        const memePromise = fetch(endpoint);
+        memePromise
+        .then((response) => response.json())
+        .then((data) => {
+            var memes = data.data.memes;
+
+            for (var i = 1; i < memes.length; i++) { 
+                var memeName = memes[i].name;
+                var memeUrl = memes[i].url;
+                const card = $("<span>").addClass("result-card");
+                const title = $("<h3>").addClass("card-tite").text(memeName);
+                card.append(title);
+                if (memeUrl != null) {
+                    const img = $("<img>").addClass("card-image");
+                    img.attr("src", memeUrl);
+                    card.append(img);
+                } else {
+                    card.append("<h3>NO MEME AVAILABLE</h3>");
+                }
+                const url = $("<a>").attr("href", memeUrl).text("View Meme");
+                card.append(url);
+                $("#results").append(card);
+            }                
+
+              function createMemeCard(memeName, memeUrl) {
+                const card = $("<span>").addClass("result-card");
+                const title = $("<h3>").addClass("card-tite").text(memeName);
+                card.append(title);
+                if (memeUrl != null) {
+                    const img = $("<img>").addClass("card-image");
+                    img.attr("src", memeUrl);
+                    card.append(img);
+                } else {
+                    card.append("<h3>NO MEME AVAILABLE</h3>");
+                }
+                const url = $("<a>").attr("href", memeUrl).text("View Meme");
+                card.append(url);
+                $("#results").prepend(card);
+             }
+            //define the search function
+            function searchForMeme() {
+                const memeName = input.val();
+                for (let i = 0; i < memes.length; i++) {
+                    if (memes[i].name.toLowerCase() == memeName.toLowerCase()) {
+                        currentMemeUrl = memes[i].url;
+                        createMemeCard(memeName, currentMemeUrl);
+                        break;
+                    }
+                }
+                const noResults = $("<p>").text("No memes found for that search.");
+                $("#results").prepend(noResults);
+            }
+            submitButton.on("click", searchForMeme);
+            $( "#empty" ).click(function() {
+                $( "body" ).empty();
+            });
+
+
+        })
+        .catch(handleError);
+      </script>
+    </div>
+</body>
+</html>
